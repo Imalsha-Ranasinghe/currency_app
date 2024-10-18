@@ -6,8 +6,8 @@ export default function MainPage() {
   const [date, setDate] = useState(null);
   const [sourceCurrency, setSourceCurrency] = useState("");
   const [targetCurrency, setTargetCurrency] = useState("");
-  const [sourceAmount, setSourceAmount] = useState("");
-  const [targetAmount, setTargetAmount] = useState("");
+  const [sourceAmount, setSourceAmount] = useState(0);
+  const [targetAmount, setTargetAmount] = useState(0);
   const [currencyNames, setCurrencyNames] = useState([]);
 
   //get all currency names
@@ -28,13 +28,18 @@ export default function MainPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      const response=await axios.get("http://localhost:5000/convert", {params:{
-        date,sourceCurrency,targetCurrency,sourceAmount}
+    try {
+      const response = await axios.get("http://localhost:5000/convert", {
+        params: {
+          date,
+          sourceCurrency,
+          targetCurrency,
+          sourceAmount,
+        },
       });
-     
 
-    }catch(err){
+      setTargetAmount(response.data);
+    } catch (err) {
       console.error(err);
     }
   };
@@ -157,6 +162,24 @@ export default function MainPage() {
                 Submit
               </button>
             </form>
+
+            {targetCurrency == 0 ? " " :
+            <div className="mt-8 bg-blue-50 p-6 rounded-lg shadow-md transition-all duration-300 ease-in-out">
+              <h2 className="text-2xl font-bold text-blue-900 text-center mb-4">
+                Conversion Result
+              </h2>
+              <p className="text-center text-lg text-slate-700 font-semibold">
+                {sourceAmount} {currencyNames[sourceCurrency]} {" = "}
+                <span className="text-lg text-slate-700 font-semibold">
+                  <span className="font-bold text-slate-950 ">
+                  {targetAmount} {" "}
+                  </span>    
+                 {currencyNames[targetCurrency]}
+              </span>
+              </p>
+            </div>
+            }
+
           </section>
         </div>
       </div>
